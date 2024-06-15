@@ -1,12 +1,12 @@
 <template>
   <div>
-    <h1>데모 앱</h1>
-    <FullCalendar :options="calendarOptions" />
+    <h1>캘린더 페이지</h1>
+    <FullCalendar :options="calendarOptions" ref="calendar" />
   </div>
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -18,6 +18,7 @@ export default {
     FullCalendar
   },
   setup() {
+    const calendarRef = ref(null);
     const calendarOptions = ref({
       plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin],
       height: '700px',
@@ -37,25 +38,99 @@ export default {
       dayMaxEvents: true,
       locale: 'ko',
       events: [],
-      select: function(arg) {
+      select: async function(arg) {
         var title = prompt('Event Title:');
         if (title) {
-          this.addEvent({ // this를 사용하여 이벤트를 추가합니다.
+          const newEvent = {
             title: title,
             start: arg.start,
             end: arg.end,
             allDay: arg.allDay
-          });
+          };
+
+          const username = localStorage.getItem('username');
+
+          if (!username) {
+            alert('로그인이 필요합니다.');
+            return;
+          }
+
+          try {
+            const response = await fetch('http://localhost:3000/events', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ username, ...newEvent })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+              const fetchEventsResponse = await fetch(`http://localhost:3000/events/${username}`);
+              const fetchEventsData = await fetchEventsResponse.json();
+              if (fetchEventsData.success) {
+                calendarOptions.value.events = fetchEventsData.events.map(event => ({
+                  id: event.id,
+                  title: event.title,
+                  start: event.start,
+                  end: event.end,
+                  allDay: event.allDay
+                }));
+              }
+            } else {
+              alert('이벤트 저장에 실패했습니다.');
+            }
+          } catch (error) {
+            console.error('Error saving event:', error);
+          }
+        }
+
+        if (calendarRef.value) {
+          calendarRef.value.getApi().unselect();
         }
       },
-      eventClick: function(info) {
+      eventClick: async function(info) {
         if (confirm(`Are you sure you want to delete the event '${info.event.title}'?`)) {
-          info.event.remove();
+          try {
+            const response = await fetch(`http://localhost:3000/events/${info.event.id}`, {
+              method: 'DELETE'
+            });
+
+            const data = await response.json();
+            if (data.success) {
+              info.event.remove();
+            } else {
+              alert('이벤트 삭제에 실패했습니다.');
+            }
+          } catch (error) {
+            console.error('Error deleting event:', error);
+          }
         }
       }
     });
 
-    return { calendarOptions };
+    onMounted(async () => {
+      const username = localStorage.getItem('username');
+      if (username) {
+        try {
+          const response = await fetch(`http://localhost:3000/events/${username}`);
+          const data = await response.json();
+          if (data.success) {
+            calendarOptions.value.events = data.events.map(event => ({
+              id: event.id,
+              title: event.title,
+              start: event.start,
+              end: event.end,
+              allDay: event.allDay
+            }));
+          }
+        } catch (error) {
+          console.error('Error fetching events:', error);
+        }
+      }
+    });
+
+    return { calendarOptions, calendarRef };
   }
 };
 </script>

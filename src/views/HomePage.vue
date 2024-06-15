@@ -44,7 +44,7 @@ export default {
         const data = await response.json();
         if (data.success) {
           localStorage.setItem('isAuthenticated', 'true');
-          localStorage.setItem('username', this.username);
+          localStorage.setItem('username', data.username); // username 저장
           this.$router.push({ name: 'CalendarPage' });
         } else {
           this.loginError = 'Invalid username or password';
