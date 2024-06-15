@@ -15,12 +15,12 @@
         <input type="text" class="form-control" id="name" v-model="user.name" readonly>
       </div>
       <button class="btn btn-primary" @click="isEditUserModalVisible = true">회원정보 수정</button>
-      <button class="btn btn-danger ml-2" @click="isDeleteUserModalVisible = true">회원탈퇴</button>
+      <button class="btn btn-danger ml-2" @click="deleteAccount">회원탈퇴</button>
     </div>
 
     <!-- 회원정보 수정 모달 -->
     <div v-if="isEditUserModalVisible" class="modal-overlay" @click.self="isEditUserModalVisible = false">
-      <div class="modal-content">
+      <div class="modal-contents">
         <h5>회원정보 수정</h5>
         <div class="form-group">
           <label for="editEmail">Email</label>
@@ -41,7 +41,7 @@
 
     <!-- 회원탈퇴 모달 -->
     <div v-if="isDeleteUserModalVisible" class="modal-overlay" @click.self="isDeleteUserModalVisible = false">
-      <div class="modal-content">
+      <div class="modal-contents">
         <p>회원 탈퇴가 완료되었습니다.</p>
         <button class="btn btn-primary" @click="isDeleteUserModalVisible = false">Close</button>
       </div>
@@ -154,12 +154,11 @@ html, body {
   justify-content: center;
   z-index: 1000;
 }
-.modal-content {
+.modal-contents {
   position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
-  /*color: var(--bs-modal-color);*/
   pointer-events: auto;
   background-color: white; /* 모달창 배경색 하얀색 */
   background-clip: padding-box;
