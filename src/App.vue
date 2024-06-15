@@ -1,31 +1,53 @@
 <template>
-  <div id="app">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-      <a class="navbar-brand" href="#">My Calendar</a>
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item"><router-link class="nav-link" to="/">Home</router-link></li>
-          <li class="nav-item"><router-link class="nav-link" to="/calendar">Calendar</router-link></li>
-          <li class="nav-item"><router-link class="nav-link" to="/mypage">My Page</router-link></li>
-        </ul>
-      </div>
-    </nav>
-    <div class="mt-5">
-      <router-view></router-view>
-    </div>
+  <div>
+    <b-navbar toggleable="lg" type="light" variant="light">
+      <b-navbar-brand href="#">My Calendar App</b-navbar-brand>
+
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <b-nav-item to="/">Home</b-nav-item>
+          <b-nav-item to="/calendar">Calendar</b-nav-item>
+          <b-nav-item to="/mypage">My Page</b-nav-item>
+        </b-navbar-nav>
+
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item v-if="isAuthenticated" @click="logout">Logout</b-nav-item>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+    <router-view />
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      isAuthenticated: localStorage.getItem('isAuthenticated') === 'true'
+    };
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('username');
+      this.isAuthenticated = false;
+      this.$router.push({ name: 'HomePage' });
+    }
+  },
+  watch: {
+    '$route'() {
+      this.isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    }
+  }
 }
 </script>
 
 <style>
-body {
-  padding-top: 56px;
-}
-.mt-5 {
-  margin-top: 70px;
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
 }
 </style>

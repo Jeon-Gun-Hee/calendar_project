@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '../views/HomePage.vue';
 import RegisterPage from '../views/RegisterPage.vue';
 import CalendarPage from '../views/CalendarPage.vue';
+import MyPage from '../views/MyPage.vue';
 
 const routes = [
   {
@@ -18,7 +19,13 @@ const routes = [
     path: '/calendar',
     name: 'CalendarPage',
     component: CalendarPage,
-    meta: { requiresAuth: true } // 로그인 필요 설정
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/mypage',
+    name: 'MyPage',
+    component: MyPage,
+    meta: { requiresAuth: true }
   }
 ];
 
@@ -27,7 +34,6 @@ const router = createRouter({
   routes
 });
 
-// 네비게이션 가드 설정
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
