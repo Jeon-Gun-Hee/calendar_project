@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>작심삼일 캘린더</h1>
+    <h1>캘린더</h1>
     <FullCalendar :options="calendarOptions" ref="calendarRef" />
   </div>
 </template>

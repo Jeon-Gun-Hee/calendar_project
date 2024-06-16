@@ -8,21 +8,21 @@
       <h2>{{ username }}님, 오늘도 좋은 하루 보내세요~</h2>
     </div>
     <div v-else>
-      <h2>Login</h2>
+      <h2>로그인</h2>
       <form @submit.prevent="login">
         <div class="form-group">
-          <label for="username">Username</label>
+          <label for="username">아이디</label>
           <input type="text" class="form-control" id="username" v-model="username" required>
         </div>
         <div class="form-group">
-          <label for="password">Password</label>
+          <label for="password">비밀번호</label>
           <input type="password" class="form-control" id="password" v-model="password" required>
         </div>
-        <button type="submit" class="btn btn-primary">Login</button>
+        <button type="submit" class="btn btn-primary">로그인하기</button>
       </form>
       <div v-if="loginError" class="alert alert-danger mt-3">{{ loginError }}</div>
       <div class="mt-3">
-        <router-link to="/register" class="btn btn-secondary">Sign Up</router-link>
+        <router-link to="/register" class="btn btn-secondary">회원가입</router-link>
       </div>
     </div>
   </div>

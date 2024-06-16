@@ -23,7 +23,7 @@
               <router-link to="/calendar" class="nav-link">Calendar</router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/mypage" class="nav-link">My Page</router-link>
+              <router-link to="/mypage" class="nav-link">MyPage</router-link>
             </li>
             <li class="nav-item ms-auto" v-if="isAuthenticated">
               <a href="#" class="nav-link" @click="logout">Logout</a>
@@ -49,8 +49,9 @@ export default {
       localStorage.removeItem('username');
       this.isAuthenticated = false;
       this.$router.push({ name: 'HomePage' });
-      this.$emit('update-auth-status');
-      location.reload(); // 페이지 새로고침
+      setTimeout(() => {
+        location.reload();
+      }, 100);
     },
     checkAuthentication() {
       this.isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';

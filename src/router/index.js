@@ -35,12 +35,14 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    if (isAuthenticated) {
-      next();
-    } else {
+    if (!isAuthenticated) {
+      alert('로그인해주세요');
       next({ name: 'HomePage' });
+    } else {
+      next();
     }
   } else {
     next();
