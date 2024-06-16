@@ -57,6 +57,7 @@ export default {
           localStorage.setItem('username', this.username);
           this.isAuthenticated = true;
           alert('로그인되었습니다.');
+          this.$emit('update-auth-status');
           setTimeout(() => {
             this.$router.push({ name: 'CalendarPage' });
           }, 2000);

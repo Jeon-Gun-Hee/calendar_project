@@ -32,7 +32,7 @@
         </div>
       </div>
     </nav>
-    <router-view />
+    <router-view @update-auth-status="checkAuthentication" />
   </div>
 </template>
 
@@ -49,11 +49,16 @@ export default {
       localStorage.removeItem('username');
       this.isAuthenticated = false;
       this.$router.push({ name: 'HomePage' });
+      this.$emit('update-auth-status');
+      location.reload(); // 페이지 새로고침
+    },
+    checkAuthentication() {
+      this.isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
     }
   },
   watch: {
     '$route'() {
-      this.isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+      this.checkAuthentication();
     }
   }
 }
