@@ -1,24 +1,24 @@
 <template>
   <div class="container mt-5 pt-5">
-    <h2>Register</h2>
+    <h2>회원가입</h2>
     <form @submit.prevent="register">
       <div class="form-group">
-        <label for="username">Username</label>
+        <label for="username">아이디</label>
         <input type="text" class="form-control" id="username" v-model="registerData.username" required>
       </div>
       <div class="form-group">
-        <label for="name">Name</label>
+        <label for="name">이름</label>
         <input type="text" class="form-control" id="name" v-model="registerData.name" required>
       </div>
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="email">이메일</label>
         <input type="email" class="form-control" id="email" v-model="registerData.email" required>
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
+        <label for="password">비밀번호</label>
         <input type="password" class="form-control" id="password" v-model="registerData.password" required>
       </div>
-      <button type="submit" class="btn btn-primary">Register</button>
+      <button type="submit" class="btn btn-primary">회원가입 하기</button>
     </form>
     <div v-if="registerError" class="alert alert-danger mt-3">{{ registerError }}</div>
     <div v-if="registerSuccess" class="alert alert-success mt-3">{{ registerSuccess }}</div>

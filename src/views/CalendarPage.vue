@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1>캘린더 페이지</h1>
-    <FullCalendar :options="calendarOptions" ref="calendar" />
+    <h1>작심삼일 캘린더</h1>
+    <FullCalendar :options="calendarOptions" ref="calendarRef" />
   </div>
 </template>
 
@@ -48,25 +48,28 @@ export default {
             allDay: arg.allDay
           };
 
-          const username = localStorage.getItem('username');
+          // 현재 로그인된 사용자의 userId 가져오기
+          const userId = localStorage.getItem('userId');
 
-          if (!username) {
-            alert('로그인이 필요합니다.');
+          if (!userId) {
+            alert('로그인 정보가 유효하지 않습니다. 다시 로그인해 주세요.');
             return;
           }
 
+          // 이벤트 정보를 서버에 저장
           try {
             const response = await fetch('http://localhost:3000/events', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
               },
-              body: JSON.stringify({ username, ...newEvent })
+              body: JSON.stringify({ userId, ...newEvent })
             });
 
             const data = await response.json();
             if (data.success) {
-              const fetchEventsResponse = await fetch(`http://localhost:3000/events/${username}`);
+              // 서버에 저장된 이벤트를 가져오기 위해 다시 불러옵니다.
+              const fetchEventsResponse = await fetch(`http://localhost:3000/events/${userId}`);
               const fetchEventsData = await fetchEventsResponse.json();
               if (fetchEventsData.success) {
                 calendarOptions.value.events = fetchEventsData.events.map(event => ({
@@ -85,12 +88,11 @@ export default {
           }
         }
 
-        if (calendarRef.value) {
-          calendarRef.value.getApi().unselect();
-        }
+        calendarRef.value.getApi().unselect();
       },
       eventClick: async function(info) {
         if (confirm(`Are you sure you want to delete the event '${info.event.title}'?`)) {
+          // 서버에서 이벤트 삭제 요청
           try {
             const response = await fetch(`http://localhost:3000/events/${info.event.id}`, {
               method: 'DELETE'
@@ -110,10 +112,10 @@ export default {
     });
 
     onMounted(async () => {
-      const username = localStorage.getItem('username');
-      if (username) {
+      const userId = localStorage.getItem('userId');
+      if (userId) {
         try {
-          const response = await fetch(`http://localhost:3000/events/${username}`);
+          const response = await fetch(`http://localhost:3000/events/${userId}`);
           const data = await response.json();
           if (data.success) {
             calendarOptions.value.events = data.events.map(event => ({

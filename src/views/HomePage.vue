@@ -1,20 +1,29 @@
 <template>
   <div class="container mt-5 pt-5">
-    <h2>Login</h2>
-    <form @submit.prevent="login">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" class="form-control" id="username" v-model="username" required>
+    <div class="banner-container">
+      <img src="@/assets/banner.jpg" alt="Banner Image" class="banner-image">
+    </div>
+    <div v-if="isAuthenticated">
+      <h1>환영합니다.</h1>
+      <h2>{{ username }}님, 오늘도 좋은 하루 보내세요~</h2>
+    </div>
+    <div v-else>
+      <h2>Login</h2>
+      <form @submit.prevent="login">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" class="form-control" id="username" v-model="username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" class="form-control" id="password" v-model="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
+      <div v-if="loginError" class="alert alert-danger mt-3">{{ loginError }}</div>
+      <div class="mt-3">
+        <router-link to="/register" class="btn btn-secondary">Sign Up</router-link>
       </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" v-model="password" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-    <div v-if="loginError" class="alert alert-danger mt-3">{{ loginError }}</div>
-    <div class="mt-3">
-      <router-link to="/register" class="btn btn-secondary">Sign Up</router-link>
     </div>
   </div>
 </template>
@@ -25,7 +34,8 @@ export default {
     return {
       username: '',
       password: '',
-      loginError: null
+      loginError: null,
+      isAuthenticated: false
     };
   },
   methods: {
@@ -44,16 +54,30 @@ export default {
         const data = await response.json();
         if (data.success) {
           localStorage.setItem('isAuthenticated', 'true');
-          localStorage.setItem('username', data.username); // username 저장
-          this.$router.push({ name: 'CalendarPage' });
+          localStorage.setItem('username', this.username);
+          this.isAuthenticated = true;
+          alert('로그인되었습니다.');
+          setTimeout(() => {
+            this.$router.push({ name: 'CalendarPage' });
+          }, 2000);
         } else {
-          this.loginError = 'Invalid username or password';
+          alert('Invalid username or password');
         }
       } catch (error) {
         console.error('Error logging in:', error);
-        this.loginError = 'An error occurred while logging in';
+        alert('An error occurred while logging in');
+      }
+    },
+    checkAuthentication() {
+      const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+      if (isAuthenticated) {
+        this.isAuthenticated = true;
+        this.username = localStorage.getItem('username');
       }
     }
+  },
+  mounted() {
+    this.checkAuthentication();
   }
 };
 </script>
@@ -66,5 +90,16 @@ html, body {
 }
 .container {
   padding-top: 56px;
+}
+.banner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.banner-image {
+  width: 500px;
+  height: 300px;
+  object-fit: cover;
 }
 </style>

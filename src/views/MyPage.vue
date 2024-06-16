@@ -1,17 +1,17 @@
 <template>
   <div class="container mt-5 pt-5">
-    <h2>My Page</h2>
+    <h2>마이 페이지</h2>
     <div v-if="user">
       <div class="form-group">
-        <label for="username">Username</label>
+        <label for="username">아이디</label>
         <input type="text" class="form-control" id="username" v-model="user.username" readonly>
       </div>
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="email">이메일</label>
         <input type="email" class="form-control" id="email" v-model="user.email" readonly>
       </div>
       <div class="form-group">
-        <label for="name">Name</label>
+        <label for="name">이름</label>
         <input type="text" class="form-control" id="name" v-model="user.name" readonly>
       </div>
       <button class="btn btn-primary" @click="isEditUserModalVisible = true">회원정보 수정</button>
@@ -23,19 +23,23 @@
       <div class="modal-contents">
         <h5>회원정보 수정</h5>
         <div class="form-group">
-          <label for="editEmail">Email</label>
+          <label for="editEmail">이메일</label>
           <input type="email" class="form-control" id="editEmail" v-model="editUser.email">
         </div>
         <div class="form-group">
-          <label for="editName">Name</label>
+          <label for="editName">이름</label>
           <input type="text" class="form-control" id="editName" v-model="editUser.name">
         </div>
         <div class="form-group">
-          <label for="editPassword">Password</label>
+          <label for="editPassword">새로운 비밀번호</label>
           <input type="password" class="form-control" id="editPassword" v-model="editUser.password">
         </div>
-        <button class="btn btn-primary" @click="updateUserInfo">Save changes</button>
-        <button class="btn btn-secondary" @click="isEditUserModalVisible = false">Close</button>
+        <div class="form-group">
+          <label for="confirmPassword">비밀번호 확인</label>
+          <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword">
+        </div>
+        <button class="btn btn-primary" @click="updateUserInfo">저장하기</button>
+        <button class="btn btn-secondary" @click="isEditUserModalVisible = false">닫기</button>
       </div>
     </div>
 
@@ -69,7 +73,9 @@ export default {
         email: '',
         name: '',
         password: ''
-      }
+      },
+      confirmPassword: '',
+      updateError: null
     };
   },
   async created() {
@@ -90,6 +96,11 @@ export default {
   },
   methods: {
     async updateUserInfo() {
+      if (this.editUser.password !== this.confirmPassword) {
+        alert('비밀번호가 일치하지 않습니다.');
+        return;
+      }
+
       const username = localStorage.getItem('username');
       try {
         const response = await fetch(`http://localhost:3000/user/${username}`, {
@@ -104,9 +115,13 @@ export default {
           this.user.email = this.editUser.email;
           this.user.name = this.editUser.name;
           this.isEditUserModalVisible = false;
+          alert('회원정보가 수정되었습니다.');
+        } else {
+          this.updateError = '회원정보 수정에 실패했습니다.';
         }
       } catch (error) {
         console.error('Error updating user data:', error);
+        this.updateError = '회원정보 수정 중 오류가 발생했습니다.';
       }
     },
     async deleteAccount() {
@@ -124,6 +139,8 @@ export default {
             this.isDeleteUserModalVisible = false;
             this.$router.push({ name: 'HomePage' });
           }, 2000);
+        } else {
+          console.error('회원 탈퇴에 실패했습니다.');
         }
       } catch (error) {
         console.error('Error deleting user account:', error);

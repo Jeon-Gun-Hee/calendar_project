@@ -1,22 +1,37 @@
 <template>
   <div>
-    <b-navbar toggleable="lg" type="light" variant="light">
-      <b-navbar-brand href="#">My Calendar App</b-navbar-brand>
-
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-      <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav>
-          <b-nav-item to="/">Home</b-nav-item>
-          <b-nav-item to="/calendar">Calendar</b-nav-item>
-          <b-nav-item to="/mypage">My Page</b-nav-item>
-        </b-navbar-nav>
-
-        <b-navbar-nav class="ml-auto">
-          <b-nav-item v-if="isAuthenticated" @click="logout">Logout</b-nav-item>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
+    <nav class="navbar navbar-expand-lg custom-navbar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">작심삼일</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <router-link to="/" class="nav-link">Home</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/calendar" class="nav-link">Calendar</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/mypage" class="nav-link">My Page</router-link>
+            </li>
+            <li class="nav-item ms-auto" v-if="isAuthenticated">
+              <a href="#" class="nav-link" @click="logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <router-view />
   </div>
 </template>
@@ -49,5 +64,18 @@ html, body {
   height: 100%;
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.custom-navbar {
+  background-color: #d3d3d3 !important; /* 회색 */
+}
+
+.nav-item .nav-link {
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.nav-item .nav-link:hover {
+  background-color: #87ceeb !important; /* 하늘색 */
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
 }
 </style>
