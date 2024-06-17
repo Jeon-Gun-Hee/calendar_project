@@ -53,6 +53,7 @@ export default {
 
           if (!userId) {
             alert('로그인 정보가 유효하지 않습니다. 다시 로그인해 주세요.');
+            this.$router.push({ name: 'HomePage' }); // 로그인 페이지로 리디렉션
             return;
           }
 
@@ -91,7 +92,7 @@ export default {
         calendarRef.value.getApi().unselect();
       },
       eventClick: async function(info) {
-        if (confirm(`Are you sure you want to delete the event '${info.event.title}'?`)) {
+        if (confirm(`일정을 삭제하시겠습니까? '${info.event.title}'?`)) {
           // 서버에서 이벤트 삭제 요청
           try {
             const response = await fetch(`http://localhost:3000/events/${info.event.id}`, {

@@ -9,3 +9,13 @@ const app = createApp(App);
 app.use(router);
 app.use(BootstrapVue3);
 app.mount('#app');
+const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+const userId = localStorage.getItem('userId');
+
+if (isAuthenticated && userId) {
+  app.config.globalProperties.$isAuthenticated = true;
+  app.config.globalProperties.$userId = userId;
+} else {
+  app.config.globalProperties.$isAuthenticated = false;
+  app.config.globalProperties.$userId = null;
+}
