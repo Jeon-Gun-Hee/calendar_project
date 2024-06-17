@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5 pt-5">
+  <div class="containers mt-5 pt-5">
     <h2>회원가입</h2>
     <form @submit.prevent="register">
       <div class="form-group">

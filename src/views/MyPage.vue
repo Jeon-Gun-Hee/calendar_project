@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5 pt-5">
+  <div class="containers mt-5 pt-5">
     <h2>마이 페이지</h2>
     <div v-if="user">
       <div class="form-group">
@@ -156,8 +156,10 @@ html, body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
 }
-.container {
-  padding-top: 56px;
+.containers {
+    padding-top: 56px;
+    width: 20%;
+    margin: auto;
 }
 .modal-overlay {
   position: fixed;

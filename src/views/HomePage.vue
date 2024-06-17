@@ -3,11 +3,11 @@
     <div class="banner-container">
       <img src="@/assets/banner.jpg" alt="Banner Image" class="banner-image">
     </div>
-    <div v-if="isAuthenticated">
+    <div class="welcomecontainer" v-if="isAuthenticated">
       <h1>환영합니다.</h1>
       <h2>{{ username }}님, 오늘도 좋은 하루 보내세요~</h2>
     </div>
-    <div v-else>
+    <div class="logincontainer" v-else>
       <h2>로그인</h2>
       <form @submit.prevent="login">
         <div class="form-group">
@@ -62,7 +62,7 @@ export default {
             this.$router.push({ name: 'CalendarPage' });
           }, 2000);
         } else {
-          alert('Invalid username or password');
+          alert('아이디 비밀번호를 잘못 입력하셨습니다.');
         }
       } catch (error) {
         console.error('Error logging in:', error);
@@ -102,5 +102,14 @@ html, body {
   width: 500px;
   height: 300px;
   object-fit: cover;
+}
+
+.logincontainer {
+    width: 30%;
+    margin: auto;
+}
+
+.welcomecontainer {
+    text-align: center;
 }
 </style>
